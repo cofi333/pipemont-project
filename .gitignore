@@ -1,0 +1,14 @@
+backend/node_modules/
+mobile_app/node_modules
+mobile_app/.expo/
+backend/.env
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+mobile_app/expo-env.d.ts
