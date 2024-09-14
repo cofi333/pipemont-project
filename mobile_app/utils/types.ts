@@ -45,6 +45,7 @@ export interface ActiveMachinesData {
 }
 
 export interface TMachine {
+    _id: string;
     machineName: string;
     machineProducer: string;
     isRented: boolean;
@@ -56,3 +57,16 @@ export interface TAvailableMachines {
     machineName: string;
     machineProducer: string;
 }
+
+export interface ModalLayoutProps {
+    isVisible: boolean;
+    setIsModalVisible: (visible: boolean) => void;
+    children: React.ReactNode;
+    title?: string;
+}
+
+export type TCustomer = {
+    customerName: string;
+    customerAddress: string;
+    customerPhoneNumber: string;
+};

@@ -50,9 +50,9 @@ router.post("/register", async(req,res) => {
                 text: `Tvoj kod za aktivaciju naloga je: ${newUser.registrationToken}`
              })
         }
-        res.status(201).json({message: "Proveri e-mail inboks za aktivaciju naloga"});
+        return res.status(201).json({message: "Proveri e-mail inboks za aktivaciju naloga"});
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: "Došlo je do greške na serveru" });
     }
 })
 
@@ -77,10 +77,10 @@ router.post("/activate", async(req,res) => {
         user.registrationExpires = undefined;
         await user.save();
 
-        res.status(200).json({ message: "Nalog je uspešno aktiviran" });
+        return res.status(200).json({ message: "Nalog je uspešno aktiviran" });
 
     }catch(err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: "Došlo je do greške na serveru" })
     }
 })
 
@@ -96,10 +96,10 @@ router.post("/login", async(req,res) => {
         if(!isGoodPassword) return res.status(401).json({message: "Uneti podaci su pogrešni"})
         const token = jwt.sign({ userId: user._id, firstName: user.firstName, lastName: user.lastName }, JWT_SECRET, { expiresIn: JWT_EXPIRES });
 
-        res.status(200).json({ token });
+        return res.status(200).json({ token });
 
     }catch(e) {
-        console.log(e)
+        return res.status(500).json({ message: "Došlo je do greške na serveru" });
     }
 })
 

@@ -12,10 +12,10 @@ router.post("/add", async(req,res) => {
         })
 
         const newMachine = await machine.save();
-        if(newMachine) res.status(201).json({message: "Mašina je uspešno dodana"})
+        if(newMachine) return res.status(201).json({message: "Mašina je uspešno dodana"})
         
     }catch(e) {
-        console.log(e)
+        return res.status(500).json({ message: "Došlo je do greške na serveru" })
     }
 })
 
@@ -28,22 +28,21 @@ router.get("/activeMachines", async(req,res) => {
         const rentedMachinesLength = rentedMachines.length;
 
 
-        res.status(200).json({
+        return res.status(200).json({
          allMachines: allMachinesLength, rentedMachines: rentedMachinesLength
         })
     }catch(e) {
-        console.log(e)
+        return res.status(500).json({ message: "Došlo je do greške na serveru" });
     }
 })
 
 // route for getting all machines
-
 router.get("/allMachines", async(req,res) => {
     try {
         const allMachines = await Machine.find();
-        res.status(200).json(allMachines)
+        return res.status(200).json(allMachines)
     }catch(e) {
-        console.log(e)
+        return res.status(500).json({ message: "Došlo je do greške na serveru" });
     }
 })
 
@@ -51,10 +50,31 @@ router.get("/allMachines", async(req,res) => {
 router.get("/allAvailableMachines", async(req,res) => {
     try {
         const allAvailableMachines = await Machine.find({isRented: false});
-        res.status(200).json(allAvailableMachines)
+        return res.status(200).json(allAvailableMachines)
     }catch(e) {
-        console.log(e)
+        return res.status(500).json({ message: "Došlo je do greške na serveru" });   
     }
 })
+
+// route for deleting the machine
+router.delete("/delete/:id", async(req,res) => {
+    try{
+        const machineID = req.params.id;
+        const machine = await Machine.findById(machineID);
+        if(machine.isRented === true) {
+            return res.status(403).json({message: "Ne možete obrisati mašinu koja je na terenu"})
+        }
+        if(!machine) {
+            return res.status(404).json({message: "Mašina nije pronađena"})
+        }
+
+        await Machine.findByIdAndDelete(machineID);
+        return res.status(200).json({message: "Mašina je uspešno obrisana"})
+    }catch(e) {
+        return res.status(500).json({ message: "Došlo je do greške na serveru" });
+    }
+})
+
+
 
 module.exports = router

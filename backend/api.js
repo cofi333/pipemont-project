@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 const cors = require("cors")
 const userRouter = require("./routes/users")
 const machineRouter = require("./routes/machines")
+const customerRouter = require("./routes/customers")
 
 
 const corsOptions = {
@@ -22,6 +23,7 @@ db.once("open", () => console.log("Connected to db"))
 app.use(express.json())
 app.use('/users', userRouter)
 app.use('/machines', machineRouter)
+app.use("/customers", customerRouter)
 
 
 app.listen(4000, () => console.log("hello server"))

@@ -9,9 +9,11 @@ import { TMachine } from "@/utils/types";
 import { useEffect } from "react";
 import useFetch from "@/hooks/useFetch";
 import { API_ENDPOINT } from "@/utils/constants";
+import RemoveMachineModal from "@/components/RemoveMachineModal";
 
 const MachineScreen = () => {
     const [isVisible, setIsVisible] = useState<boolean>(false);
+    const [isVisibleSecond, setIsVisibleSecond] = useState<boolean>(false);
 
     const {
         data,
@@ -29,11 +31,21 @@ const MachineScreen = () => {
                         onPress={() => setIsVisible(true)}
                         title="Dodaj novu mašinu"
                     />
+                    <Button
+                        type="red"
+                        onPress={() => setIsVisibleSecond(true)}
+                        title="Izbriši mašinu"
+                    />
                 </View>
                 <AllMachines data={data!} loading={loading} />
                 <AddMachineModal
                     isVisible={isVisible}
                     setIsModalVisible={setIsVisible}
+                    refresh={fetchData}
+                />
+                <RemoveMachineModal
+                    isVisible={isVisibleSecond}
+                    setIsModalVisible={setIsVisibleSecond}
                     refresh={fetchData}
                 />
             </View>

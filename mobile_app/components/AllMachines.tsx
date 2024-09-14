@@ -4,9 +4,13 @@ import {
     Text,
     StyleSheet,
     ActivityIndicator,
+    TouchableOpacity,
 } from "react-native";
 import { API_ENDPOINT, COLORS } from "@/utils/constants";
 import { TMachine } from "@/utils/types";
+import ModalLayout from "./ModalLayout";
+import { useState } from "react";
+import MachineRentedInformations from "./MachineRentedInformations";
 
 const AllMachines = ({
     loading,
@@ -15,6 +19,9 @@ const AllMachines = ({
     loading: boolean;
     data: TMachine[];
 }) => {
+    const [isVisible, setIsVisible] = useState<boolean>(false);
+    const [machineId, setMachineId] = useState<string>();
+
     if (loading) {
         return (
             <View style={STYLES.center}>
@@ -24,31 +31,48 @@ const AllMachines = ({
     }
 
     return (
-        <View style={STYLES.container}>
-            <Text style={STYLES.header}>Sve mašine</Text>
-            <FlatList
-                data={data}
-                renderItem={({ item }) => (
-                    <View style={STYLES.itemContainer}>
-                        <Text style={STYLES.item}>
-                            {item.machineProducer} {item.machineName}
-                        </Text>
-                        <Text
-                            style={[
-                                {
-                                    color: item.isRented
-                                        ? COLORS.color_red
-                                        : COLORS.color_green,
-                                },
-                            ]}
+        <>
+            <View style={STYLES.container}>
+                <Text style={STYLES.header}>Sve mašine</Text>
+                <FlatList
+                    data={data}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity
+                            style={STYLES.itemContainer}
+                            onPress={() => {
+                                if (item.isRented === true) {
+                                    setIsVisible(true);
+                                    setMachineId(item._id);
+                                }
+                            }}
                         >
-                            {item.isRented ? "Zauzeta" : "Dostupna"}
-                        </Text>
-                    </View>
-                )}
-                style={STYLES.list}
-            />
-        </View>
+                            <Text style={STYLES.item}>
+                                {item.machineProducer} {item.machineName}
+                            </Text>
+                            <Text
+                                style={[
+                                    {
+                                        color: item.isRented
+                                            ? COLORS.color_red
+                                            : COLORS.color_green,
+                                    },
+                                ]}
+                            >
+                                {item.isRented ? "Zauzeta" : "Dostupna"}{" "}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                    style={STYLES.list}
+                />
+            </View>
+            <ModalLayout
+                isVisible={isVisible}
+                setIsModalVisible={setIsVisible}
+                title="Iznajmljeno"
+            >
+                <MachineRentedInformations machineId={machineId!} />
+            </ModalLayout>
+        </>
     );
 };
 

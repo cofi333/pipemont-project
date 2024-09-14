@@ -18,6 +18,9 @@ export const API_ENDPOINT: TApiEndpoints = {
     ALL_ACTIVE_MACHINES: "/machines/activeMachines",
     ALL_MACHINES: "/machines/allMachines",
     ALL_AVAILABLE_MACHINES: "/machines/allAvailableMachines",
+    ADD_CUSTOMER: "/customers/add",
+    DELETE_MACHINE: "/machines/delete",
+    GET_CUSTOMER_INFO: "/customers/getCustomerInformations",
 };
 
 export const LOGIN_INPUTS: TInputs[] = [

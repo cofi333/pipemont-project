@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    Platform,
+    Pressable,
+} from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import { API_ENDPOINT } from "@/utils/constants";
@@ -11,8 +18,14 @@ import useFetch from "@/hooks/useFetch";
 import { TAvailableMachines } from "@/utils/types";
 import { GLOBALS } from "@/styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useRecoilValue } from "recoil";
+import { refreshAtom } from "@/utils/constants";
 
-const AddCustomersForm = () => {
+const AddCustomersForm = ({
+    setIsModalVisible,
+}: {
+    setIsModalVisible: (state: boolean) => void;
+}) => {
     const {
         handleSubmit,
         control,
@@ -24,7 +37,31 @@ const AddCustomersForm = () => {
         API_ENDPOINT.ALL_AVAILABLE_MACHINES
     );
 
-    const onSubmit = async (data: any) => {};
+    const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+    const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+    const [showStartDatePicker, setShowStartDatePicker] =
+        useState<boolean>(false);
+    const [showEndDatePicker, setShowEndDatePicker] = useState<boolean>(false);
+    const refresActiveMachines = useRecoilValue(refreshAtom);
+
+    const onSubmit = async (data: any) => {
+        try {
+            setIsLoading(true);
+            const response = await axiosInstance.post(
+                API_ENDPOINT.ADD_CUSTOMER,
+                data
+            );
+
+            if (response.status === 201) {
+                refresActiveMachines();
+                setIsModalVisible(false);
+                setIsLoading(false);
+                showToast("success", response.data.message);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <View style={STYLES.form}>
@@ -32,26 +69,25 @@ const AddCustomersForm = () => {
                 <Controller
                     control={control}
                     render={({ field: { onChange } }) => (
-                        <>
-                            <Dropdown
-                                onChange={(item) => {
-                                    // onChange(item.key);
-                                }}
-                                data={data || []}
-                                labelField="machineName"
-                                valueField="_id"
-                                placeholderStyle={STYLES.selectText}
-                                selectedTextStyle={STYLES.selectText}
-                                itemTextStyle={STYLES.selectText}
-                                style={STYLES.selectInput}
-                                maxHeight={150}
-                                autoScroll={false}
-                                placeholder="Izaberite mašinu"
-                            />
-                        </>
+                        <Dropdown
+                            onChange={(item) => {
+                                onChange(item._id);
+                            }}
+                            data={data || []}
+                            labelField="machineName"
+                            valueField="_id"
+                            placeholderStyle={STYLES.selectText}
+                            selectedTextStyle={STYLES.selectText}
+                            itemTextStyle={STYLES.selectText}
+                            style={STYLES.selectInput}
+                            maxHeight={150}
+                            autoScroll={false}
+                            placeholder="Izaberite mašinu"
+                        />
                     )}
                     name="machine"
                 />
+
                 <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
@@ -72,6 +108,7 @@ const AddCustomersForm = () => {
                     )}
                     name="customerName"
                 />
+
                 <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
@@ -92,7 +129,31 @@ const AddCustomersForm = () => {
                     )}
                     name="customerAddress"
                 />
+
+                <Controller
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <>
+                            <TextInput
+                                placeholder="Unesite broj telefona klijenta"
+                                style={GLOBALS.input}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                            />
+                            {errors["customerPhoneNumber"]?.message && (
+                                <Text style={GLOBALS.error}>
+                                    {String(
+                                        errors["customerPhoneNumber"]!.message
+                                    )}
+                                </Text>
+                            )}
+                        </>
+                    )}
+                    name="customerPhoneNumber"
+                />
             </View>
+
             <View style={STYLES.button}>
                 <Button
                     title="Dodaj"
@@ -126,6 +187,10 @@ const STYLES = StyleSheet.create({
     },
     selectText: {
         fontSize: 12,
+    },
+    nonEditableInput: {
+        color: COLORS.color_black,
+        opacity: 1,
     },
 });
 

@@ -1,7 +1,7 @@
-import AddMachineForm from "./AddMachineForm";
 import ModalLayout from "./ModalLayout";
+import RemoveMachineForm from "./RemoveMachineForm";
 
-const AddMachineModal = ({
+const RemoveMachineModal = ({
     isVisible,
     setIsModalVisible,
     refresh,
@@ -12,11 +12,11 @@ const AddMachineModal = ({
 }) => {
     return (
         <ModalLayout
+            title="Izbriši mašinu"
             isVisible={isVisible}
             setIsModalVisible={setIsModalVisible}
-            title="Nova mašina"
         >
-            <AddMachineForm
+            <RemoveMachineForm
                 setIsModalVisible={setIsModalVisible}
                 refresh={refresh}
             />
@@ -24,4 +24,4 @@ const AddMachineModal = ({
     );
 };
 
-export default AddMachineModal;
+export default RemoveMachineModal;
