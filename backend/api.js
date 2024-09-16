@@ -42,8 +42,7 @@ async function run() {
   }
   run().catch(console.dir);
 
-
-
+module.exports = app
 
 
 
