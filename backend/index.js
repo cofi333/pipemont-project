@@ -2,9 +2,9 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const express = require("express")
 const mongoose = require("mongoose")
 const cors = require("cors")
-const userRouter = require("../routes/users")
-const machineRouter = require("../routes/machines")
-const customerRouter = require("../routes/customers")
+const userRouter = require("./routes/users")
+const machineRouter = require("./routes/machines")
+const customerRouter = require("./routes/customers")
 const { MONGODB_URI } = process.env;
 
 
