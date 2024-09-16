@@ -1,6 +1,7 @@
 backend/node_modules/
 mobile_app/node_modules
 mobile_app/.expo/
+mobile_app/.env
 backend/.env
 dist/
 npm-debug.*
