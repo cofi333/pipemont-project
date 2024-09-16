@@ -40,7 +40,11 @@ router.get("/activeMachines", async(req,res) => {
 router.get("/allMachines", async(req,res) => {
     try {
         const allMachines = await Machine.find();
-        return res.status(200).json(allMachines)
+        const machinesWithFullName = allMachines.map(machine => ({
+            ...machine._doc, 
+            fullNameMachine: `${machine.machineProducer} ${machine.machineName}`
+        }));    
+        return res.status(200).json(machinesWithFullName)
     }catch(e) {
         return res.status(500).json({ message: "Došlo je do greške na serveru" });
     }
@@ -50,7 +54,11 @@ router.get("/allMachines", async(req,res) => {
 router.get("/allAvailableMachines", async(req,res) => {
     try {
         const allAvailableMachines = await Machine.find({isRented: false});
-        return res.status(200).json(allAvailableMachines)
+        const machinesWithFullName = allAvailableMachines.map(machine => ({
+            ...machine._doc, 
+            fullNameMachine: `${machine.machineProducer} ${machine.machineName}`
+        }));       
+        return res.status(200).json(machinesWithFullName)
     }catch(e) {
         return res.status(500).json({ message: "Došlo je do greške na serveru" });   
     }

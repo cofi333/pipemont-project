@@ -56,6 +56,7 @@ export interface TAvailableMachines {
     isRenter: boolean;
     machineName: string;
     machineProducer: string;
+    fullNameMachine: string;
 }
 
 export interface ModalLayoutProps {
@@ -66,6 +67,7 @@ export interface ModalLayoutProps {
 }
 
 export type TCustomer = {
+    _id: string;
     customerName: string;
     customerAddress: string;
     customerPhoneNumber: string;

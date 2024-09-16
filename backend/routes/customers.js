@@ -41,4 +41,32 @@ router.get("/getCustomerInformations/:id", async(req,res) => {
     }
 })
 
+// route for getting all customers
+router.get("/getAll", async(req, res) => {
+    try{
+        const allCustomers = await Customer.find();
+        return res.status(200).json(allCustomers);
+    }catch(e){
+        return res.status(500).json({message:"Došlo je do greške na serveru"})
+    }
+})
+
+// route for deleting customer
+router.delete("/delete/:id", async(req,res) => {
+    try {
+        const customerID = req.params.id;
+        const customer = await Customer.findById(customerID);
+        if (!customer) {
+            return res.status(404).json({ message: "Customer not found" });
+        }
+        const machineID = customer.machineId;
+        await Machine.findByIdAndUpdate(machineID, { isRented: false });
+        await Customer.findByIdAndDelete(customerID);
+        return res.status(200).json({message: "Uspešno ste završili iznajmljivanje mašine"})
+    }
+    catch(e) {
+        return res.status(500).json({message:"Došlo je do greške na serveru"})
+    }
+})
+
 module.exports = router

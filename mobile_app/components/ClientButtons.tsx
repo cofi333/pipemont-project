@@ -2,9 +2,11 @@ import { View, Text, StyleSheet } from "react-native";
 import Button from "./Button";
 import { useState } from "react";
 import AddCustomersModal from "./AddCustomersModal";
+import ClientChargeModal from "./ClientChargeModal";
 
 const ClientButtons = () => {
     const [isVisible, setIsVisible] = useState<boolean>(false);
+    const [isVisibleSecond, setIsVisibleSecond] = useState<boolean>(false);
     return (
         <View style={STYLES.container}>
             <View>
@@ -16,11 +18,19 @@ const ClientButtons = () => {
                     title="Dodaj novog klijenta"
                     type="green"
                 />
-                <Button onPress={() => {}} title="Naplati" type="primarz" />
+                <Button
+                    onPress={() => setIsVisibleSecond(true)}
+                    title="Naplati"
+                    type="primarz"
+                />
             </View>
             <AddCustomersModal
                 isVisible={isVisible}
                 setIsModalVisible={setIsVisible}
+            />
+            <ClientChargeModal
+                isVisible={isVisibleSecond}
+                setIsModalVisible={setIsVisibleSecond}
             />
         </View>
     );

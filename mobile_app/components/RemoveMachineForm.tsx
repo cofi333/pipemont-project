@@ -10,7 +10,7 @@ import { refreshAtom } from "@/utils/constants";
 import { Dropdown } from "react-native-element-dropdown";
 import { COLORS } from "@/utils/constants";
 import useFetch from "@/hooks/useFetch";
-import { TMachine } from "@/utils/types";
+import { TAvailableMachines } from "@/utils/types";
 import axios from "axios";
 
 const RemoveMachineForm = ({
@@ -27,7 +27,9 @@ const RemoveMachineForm = ({
     } = useForm();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const refresActiveMachines = useRecoilValue(refreshAtom);
-    const { data, loading } = useFetch<TMachine[]>(API_ENDPOINT.ALL_MACHINES);
+    const { data, loading } = useFetch<TAvailableMachines[]>(
+        API_ENDPOINT.ALL_MACHINES
+    );
 
     const onSubmit = async (data: any) => {
         try {
@@ -68,7 +70,7 @@ const RemoveMachineForm = ({
                             onChange(item._id);
                         }}
                         data={data || []}
-                        labelField="machineName"
+                        labelField="fullNameMachine"
                         valueField="_id"
                         placeholderStyle={STYLES.selectText}
                         selectedTextStyle={STYLES.selectText}

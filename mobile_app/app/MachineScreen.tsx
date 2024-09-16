@@ -61,7 +61,6 @@ const STYLES = StyleSheet.create({
     buttons: {
         paddingVertical: 24,
         paddingHorizontal: 32,
-        marginTop: 100,
     },
 });
 

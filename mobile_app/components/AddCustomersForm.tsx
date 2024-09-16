@@ -42,7 +42,7 @@ const AddCustomersForm = ({
     const [showStartDatePicker, setShowStartDatePicker] =
         useState<boolean>(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState<boolean>(false);
-    const refresActiveMachines = useRecoilValue(refreshAtom);
+    const refreshActiveMachines = useRecoilValue(refreshAtom);
 
     const onSubmit = async (data: any) => {
         try {
@@ -53,7 +53,7 @@ const AddCustomersForm = ({
             );
 
             if (response.status === 201) {
-                refresActiveMachines();
+                refreshActiveMachines();
                 setIsModalVisible(false);
                 setIsLoading(false);
                 showToast("success", response.data.message);
@@ -74,7 +74,7 @@ const AddCustomersForm = ({
                                 onChange(item._id);
                             }}
                             data={data || []}
-                            labelField="machineName"
+                            labelField="fullNameMachine"
                             valueField="_id"
                             placeholderStyle={STYLES.selectText}
                             selectedTextStyle={STYLES.selectText}

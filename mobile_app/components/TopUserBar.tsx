@@ -1,11 +1,47 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    Animated,
+    Dimensions,
+    TouchableOpacity,
+} from "react-native";
 import { useRecoilState } from "recoil";
 import { COLORS, userAtom } from "@/utils/constants";
 import { correctNameMessage } from "@/utils/functions";
 import { images } from "@/assets/images";
+import SideBar from "./SideBar";
+import { useRef, useState } from "react";
 
-const TopUserBar = ({ title }: { title?: string }) => {
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
+
+const TopUserBar = ({
+    title,
+    navigation,
+}: {
+    title?: string;
+    navigation: any;
+}) => {
     const [user] = useRecoilState(userAtom);
+    const slideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;
+
+    const slideIn = () => {
+        Animated.timing(slideAnim, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+        }).start();
+    };
+
+    const slideOut = () => {
+        Animated.timing(slideAnim, {
+            toValue: SCREEN_WIDTH,
+            duration: 300,
+            useNativeDriver: true,
+        }).start();
+    };
+
     return (
         <View style={STYLES.container}>
             <View>
@@ -22,13 +58,18 @@ const TopUserBar = ({ title }: { title?: string }) => {
                     )}
                 </Text>
             </View>
-            <View>
+            <TouchableOpacity onPress={slideIn}>
                 <Image
                     source={images.menu}
-                    alt="User image"
+                    alt="Menu image"
                     style={STYLES.userImage}
                 />
-            </View>
+            </TouchableOpacity>
+            <SideBar
+                slideAnim={slideAnim}
+                slideOut={slideOut}
+                navigation={navigation}
+            />
         </View>
     );
 };
@@ -39,9 +80,7 @@ const STYLES = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        position: "absolute",
-        top: 0,
-        width: "100%",
+        height: 100,
     },
     message: {
         fontSize: 22,

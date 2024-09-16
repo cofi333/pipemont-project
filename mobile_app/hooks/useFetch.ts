@@ -13,7 +13,7 @@ const useFetch = <T>(url: string) => {
     const fetchData = useCallback(async () => {
         try {
             setLoading(true);
-            let response = await axios.get(`http://192.168.1.8:4000${url}`);
+            let response = await axios.get(`http://192.168.1.6:4000${url}`);
             setData(response.data);
         } catch (err: any) {
             setError(err);

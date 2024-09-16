@@ -40,8 +40,8 @@ const HomeScreen = ({ navigation }: any) => {
     return (
         <>
             <View style={STYLES.content}>
-                <TopUserBar />
-                <View>
+                <TopUserBar navigation={navigation} />
+                <View style={STYLES.client}>
                     <ActiveMachines navigation={navigation} />
                     <ClientButtons />
                 </View>
@@ -54,7 +54,10 @@ const HomeScreen = ({ navigation }: any) => {
 const STYLES = StyleSheet.create({
     content: {
         flex: 1,
-        justifyContent: "center",
+        position: "relative",
+    },
+    client: {
+        marginTop: 64,
     },
 });
 
