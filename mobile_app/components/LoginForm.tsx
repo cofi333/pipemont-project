@@ -37,6 +37,7 @@ const LoginForm = ({ navigation }: any) => {
             if (axios.isAxiosError(error)) {
                 switch (error?.response?.status) {
                     case 400:
+                    case 401:
                     case 500:
                         setIsLoading(false);
                         showToast("error", error.response.data.message);
