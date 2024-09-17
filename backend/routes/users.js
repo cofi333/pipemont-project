@@ -98,6 +98,7 @@ router.post("/login", async(req,res) => {
         const { email, password } = req.body;
 
         const user = await User.findOne({email});
+        if(user.isActive === false) return res.status(403).json({message: "Molimo vas aktivirajte vaš nalog"})
         if(!user) return res.status(401).json({message: "Uneti podaci su pogrešni"})
         const isGoodPassword = await bcrypt.compare(password, user.password);
         if(!isGoodPassword) return res.status(401).json({message: "Uneti podaci su pogrešni"})

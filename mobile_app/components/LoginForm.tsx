@@ -38,6 +38,7 @@ const LoginForm = ({ navigation }: any) => {
                 switch (error?.response?.status) {
                     case 400:
                     case 401:
+                    case 403:
                     case 500:
                         setIsLoading(false);
                         showToast("error", error.response.data.message);
