@@ -33,7 +33,10 @@ const ActiveMachines = ({ navigation }: any) => {
         >
             {loading ? (
                 <View style={STYLES.centerContainer}>
-                    <ActivityIndicator color={COLORS.color_primary} />
+                    <ActivityIndicator
+                        size="large"
+                        color={COLORS.color_primary}
+                    />
                 </View>
             ) : (
                 <>
