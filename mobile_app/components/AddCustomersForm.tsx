@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
-import { API_ENDPOINT } from "@/utils/constants";
+import { ADD_CLIENT_SCHEMA, API_ENDPOINT } from "@/utils/constants";
 import Button from "./Button";
 import axiosInstance from "@/hooks/axiosInstance";
 import { showToast } from "@/utils/functions";
@@ -21,6 +21,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRecoilValue } from "recoil";
 import { refreshAtom } from "@/utils/constants";
 import axios from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const AddCustomersForm = ({
     setIsModalVisible,
@@ -32,7 +33,9 @@ const AddCustomersForm = ({
         control,
         getValues,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        resolver: zodResolver(ADD_CLIENT_SCHEMA),
+    });
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { data, loading } = useFetch<TAvailableMachines[]>(
         API_ENDPOINT.ALL_AVAILABLE_MACHINES
@@ -78,21 +81,28 @@ const AddCustomersForm = ({
                 <Controller
                     control={control}
                     render={({ field: { onChange } }) => (
-                        <Dropdown
-                            onChange={(item) => {
-                                onChange(item._id);
-                            }}
-                            data={data || []}
-                            labelField="fullNameMachine"
-                            valueField="_id"
-                            placeholderStyle={STYLES.selectText}
-                            selectedTextStyle={STYLES.selectText}
-                            itemTextStyle={STYLES.selectText}
-                            style={STYLES.selectInput}
-                            maxHeight={150}
-                            autoScroll={false}
-                            placeholder="Izaberite mašinu"
-                        />
+                        <>
+                            <Dropdown
+                                onChange={(item) => {
+                                    onChange(item._id);
+                                }}
+                                data={data || []}
+                                labelField="fullNameMachine"
+                                valueField="_id"
+                                placeholderStyle={STYLES.selectText}
+                                selectedTextStyle={STYLES.selectText}
+                                itemTextStyle={STYLES.selectText}
+                                style={STYLES.selectInput}
+                                maxHeight={150}
+                                autoScroll={false}
+                                placeholder="Izaberite mašinu"
+                            />
+                            {errors["machine"]?.message && (
+                                <Text style={GLOBALS.error}>
+                                    {String(errors["machine"]!.message)}
+                                </Text>
+                            )}
+                        </>
                     )}
                     name="machine"
                 />

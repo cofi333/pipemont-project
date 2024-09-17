@@ -1,5 +1,6 @@
 import { TApiEndpoints, TInputs } from "./types";
 import { atom } from "recoil";
+import { z } from "zod";
 
 export const COLORS = {
     color_primary: "#0f76c5",
@@ -109,4 +110,106 @@ export const userAtom = atom({
 export const refreshAtom = atom({
     key: "refreshAtom",
     default: () => {},
+});
+
+export const LOGIN_SCHEMA = z.object({
+    email: z
+        .string({ message: "E-mail adresa je obavezna" })
+        .email("E-mail adresa nije validna"),
+    password: z.string({ message: "Šifra je obavezna" }).regex(/^.{5,}$/, {
+        message: "Šifra mora da ima barem 5 karaktera",
+    }),
+});
+
+export const REGISTER_SCHEMA = z
+    .object({
+        firstName: z
+            .string({ message: "Ime je obavezno" })
+            .min(3, {
+                message: "Ime mora da ima barem 3 karaktera",
+            })
+            .max(45, { message: "Ime mora da ima maksimum 15 karaktera" }),
+
+        lastName: z
+            .string({ message: "Prezime je obavezno" })
+            .min(3, {
+                message: "Prezime mora da ima barem 3 karaktera",
+            })
+            .max(45, { message: "Prezime mora da ima maksimum 20 karaktera" }),
+
+        email: z
+            .string({ message: "E-mail adresa je obavezna" })
+            .email("E-mail adresa nije validna"),
+        password: z.string({ message: "Šifra je obavezna" }).regex(/^.{5,}$/, {
+            message: "Šifra mora da sadrži barem 5 karaktera",
+        }),
+        repeatPassword: z.string({ message: "Ponovljena šifra ja obavezna" }),
+        phoneNumber: z
+            .string({ message: "Broj telefona je obavezno" })
+            .regex(/^\+?(?:\d\s?){6,14}$/, {
+                message: "Broj telefona nije validan",
+            }),
+    })
+    .refine((data) => data.password === data.repeatPassword, {
+        message: "Šifre se ne poklapaju",
+        path: ["repeatPassword"],
+    });
+
+export const ACTIVATE_ACCOUNT_SCHEMA = z.object({
+    registrationToken: z.string({ message: "Token je obavezan" }),
+});
+
+export const ADD_MACHINE_SCHEMA = z.object({
+    machineProducer: z
+        .string({ message: "Proizvođač je obavezan" })
+        .min(2, {
+            message: "Proizvođač mora da ima barem 2 karaktera",
+        })
+        .max(15, {
+            message: "Proizvođač mora da ima maksimum 15 karaktera",
+        }),
+    machineName: z
+        .string({ message: "Ime mašine je obavezno" })
+        .min(2, {
+            message: "Ime mašine mora da ima barem 2 karaktera",
+        })
+        .max(15, { message: "Ime mašine mora da ima maksimum 15 karaktera" }),
+});
+
+export const DELETE_MACHINE_SCHEMA = z.object({
+    machine: z.string({ message: "Morate izabrati mašinu" }),
+});
+
+export const PRICE_SCHEMA = z.object({
+    price: z.string({ message: "Uneta cena mora biti broj" }),
+});
+
+export const ADD_CLIENT_SCHEMA = z.object({
+    machine: z.string({ message: "Morate izabrati mašinu" }),
+    customerName: z
+        .string({ message: "Ime klijenta je obavezno" })
+        .min(3, {
+            message: "Ime klijenta mora imati barem 3 karaktera",
+        })
+        .max(15, {
+            message: "Ime klijenta mora imati maksimum 20 karaktera",
+        }),
+    customerAddress: z
+        .string({ message: "Adresa je obavezna" })
+        .min(3, {
+            message: "Adresa mora imati barem 3 karaktera",
+        })
+        .max(25, {
+            message: "Adresa mora imati maksimum 25 karaktera",
+        }),
+    customerPhoneNumber: z
+        .string({ message: "Broj telefona je obavezno" })
+        .regex(/^\+?(?:\d\s?){6,14}$/, {
+            message: "Broj telefona nije validan",
+        }),
+});
+
+export const CLIENT_CHARGE_SCHEMA = z.object({
+    client: z.string({ message: "Morate izabrati klijenta" }),
+    price: z.string({ message: "Broj iznajmljenih sati je obavezno" }),
 });

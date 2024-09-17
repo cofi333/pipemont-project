@@ -2,13 +2,18 @@ import { View, Text, StyleSheet, TextInput } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import { GLOBALS } from "@/styles";
-import { API_ENDPOINT, ADD_MACHINE_INPUTS } from "@/utils/constants";
+import {
+    API_ENDPOINT,
+    ADD_MACHINE_INPUTS,
+    ADD_MACHINE_SCHEMA,
+} from "@/utils/constants";
 import Button from "./Button";
 import axiosInstance from "@/hooks/axiosInstance";
 import { showToast } from "@/utils/functions";
 import { useRecoilValue } from "recoil";
 import { refreshAtom } from "@/utils/constants";
 import axios from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const AddMachineForm = ({
     setIsModalVisible,
@@ -21,7 +26,9 @@ const AddMachineForm = ({
         handleSubmit,
         control,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        resolver: zodResolver(ADD_MACHINE_SCHEMA),
+    });
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const refresActiveMachines = useRecoilValue(refreshAtom);
 

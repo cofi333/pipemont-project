@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
-import { API_ENDPOINT } from "@/utils/constants";
+import { API_ENDPOINT, DELETE_MACHINE_SCHEMA } from "@/utils/constants";
 import Button from "./Button";
 import axiosInstance from "@/hooks/axiosInstance";
 import { showToast } from "@/utils/functions";
@@ -12,6 +12,8 @@ import { COLORS } from "@/utils/constants";
 import useFetch from "@/hooks/useFetch";
 import { TAvailableMachines } from "@/utils/types";
 import axios from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { GLOBALS } from "@/styles";
 
 const RemoveMachineForm = ({
     setIsModalVisible,
@@ -24,7 +26,9 @@ const RemoveMachineForm = ({
         handleSubmit,
         control,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        resolver: zodResolver(DELETE_MACHINE_SCHEMA),
+    });
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const refresActiveMachines = useRecoilValue(refreshAtom);
     const { data, loading } = useFetch<TAvailableMachines[]>(
@@ -83,6 +87,11 @@ const RemoveMachineForm = ({
                 )}
                 name="machine"
             />
+            {errors["machine"]?.message && (
+                <Text style={GLOBALS.error}>
+                    {String(errors["machine"]!.message)}
+                </Text>
+            )}
             <View style={STYLES.button}>
                 <Button
                     title="Izbriši"

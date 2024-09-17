@@ -4,9 +4,10 @@ import { GLOBALS } from "@/styles";
 import Button from "./Button";
 import { useState } from "react";
 import axiosInstance from "@/hooks/axiosInstance";
-import { API_ENDPOINT } from "@/utils/constants";
+import { ACTIVATE_ACCOUNT_SCHEMA, API_ENDPOINT } from "@/utils/constants";
 import { showToast } from "@/utils/functions";
 import axios from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const ActivateAccountForm = ({
     changeForm,
@@ -17,7 +18,9 @@ const ActivateAccountForm = ({
         handleSubmit,
         control,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        resolver: zodResolver(ACTIVATE_ACCOUNT_SCHEMA),
+    });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const onSubmit = async (data: any) => {
@@ -37,6 +40,7 @@ const ActivateAccountForm = ({
             if (axios.isAxiosError(error)) {
                 switch (error?.response?.status) {
                     case 400:
+                    case 404:
                     case 500:
                         setIsLoading(false);
                         showToast("error", error.response.data.message);

@@ -2,7 +2,7 @@ import { View, StyleSheet, TextInput, Text } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { Dropdown } from "react-native-element-dropdown";
-import { API_ENDPOINT, COLORS } from "@/utils/constants";
+import { API_ENDPOINT, CLIENT_CHARGE_SCHEMA, COLORS } from "@/utils/constants";
 import useFetch from "@/hooks/useFetch";
 import { TCustomer } from "@/utils/types";
 import { GLOBALS } from "@/styles";
@@ -13,6 +13,7 @@ import { showToast } from "@/utils/functions";
 import { useRecoilValue } from "recoil";
 import { refreshAtom } from "@/utils/constants";
 import axios from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const ClientChargeForm = ({
     setIsModalVisible,
@@ -23,7 +24,9 @@ const ClientChargeForm = ({
         handleSubmit,
         control,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        resolver: zodResolver(CLIENT_CHARGE_SCHEMA),
+    });
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { data, loading } = useFetch<TCustomer[]>(
         API_ENDPOINT.GET_ALL_CUSTOMERS
@@ -79,21 +82,28 @@ const ClientChargeForm = ({
             <Controller
                 control={control}
                 render={({ field: { onChange } }) => (
-                    <Dropdown
-                        onChange={(item) => {
-                            onChange(item._id);
-                        }}
-                        data={data || []}
-                        labelField="customerName"
-                        valueField="_id"
-                        placeholderStyle={STYLES.selectText}
-                        selectedTextStyle={STYLES.selectText}
-                        itemTextStyle={STYLES.selectText}
-                        style={STYLES.selectInput}
-                        maxHeight={150}
-                        autoScroll={false}
-                        placeholder="Izaberite klijenta"
-                    />
+                    <>
+                        <Dropdown
+                            onChange={(item) => {
+                                onChange(item._id);
+                            }}
+                            data={data || []}
+                            labelField="customerName"
+                            valueField="_id"
+                            placeholderStyle={STYLES.selectText}
+                            selectedTextStyle={STYLES.selectText}
+                            itemTextStyle={STYLES.selectText}
+                            style={STYLES.selectInput}
+                            maxHeight={150}
+                            autoScroll={false}
+                            placeholder="Izaberite klijenta"
+                        />
+                        {errors["client"]?.message && (
+                            <Text style={GLOBALS.error}>
+                                {String(errors["client"]!.message)}
+                            </Text>
+                        )}
+                    </>
                 )}
                 name="client"
             />
@@ -130,12 +140,14 @@ const ClientChargeForm = ({
                 </View>
             )}
 
-            <Button
-                onPress={handleSubmit(onSubmit)}
-                title="Naplati"
-                type="green"
-                isLoading={isLoading}
-            />
+            <View style={STYLES.buttonSubmit}>
+                <Button
+                    onPress={handleSubmit(onSubmit)}
+                    title="Naplati"
+                    type="green"
+                    isLoading={isLoading}
+                />
+            </View>
         </View>
     );
 };
@@ -167,13 +179,17 @@ const STYLES = StyleSheet.create({
     },
     priceContainer: {
         paddingHorizontal: 8,
-        paddingVertical: 24,
+        paddingTop: 24,
+        paddingBottom: 8,
         flexDirection: "row",
         justifyContent: "flex-end",
     },
     price: {
         color: COLORS.color_green,
         fontSize: 20,
+    },
+    buttonSubmit: {
+        marginTop: 16,
     },
 });
 

@@ -1,13 +1,18 @@
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { GLOBALS } from "@/styles";
-import { API_ENDPOINT, REGISTER_INPUTS } from "@/utils/constants";
+import {
+    API_ENDPOINT,
+    REGISTER_INPUTS,
+    REGISTER_SCHEMA,
+} from "@/utils/constants";
 import { useState } from "react";
 import Button from "./Button";
 import { showToast } from "@/utils/functions";
 import axiosInstance from "@/hooks/axiosInstance";
 import ActivateAccountForm from "./ActivateAccountForm";
 import axios from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const RegisterForm = ({
     changeForm,
@@ -18,7 +23,9 @@ const RegisterForm = ({
         handleSubmit,
         control,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        resolver: zodResolver(REGISTER_SCHEMA),
+    });
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [showActivateAccount, setShowAcctivateAccount] =
         useState<boolean>(false);

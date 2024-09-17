@@ -25,7 +25,8 @@ export const GLOBALS = StyleSheet.create({
         fontSize: 12,
     },
     error: {
-        fontSize: 12,
+        fontSize: 10,
+        paddingHorizontal: 8,
         color: COLORS.color_secondary,
     },
     scrollContainer: {

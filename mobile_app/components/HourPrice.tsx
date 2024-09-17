@@ -1,4 +1,4 @@
-import { COLORS } from "@/utils/constants";
+import { COLORS, PRICE_SCHEMA } from "@/utils/constants";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { GLOBALS } from "@/styles";
@@ -6,6 +6,7 @@ import Button from "./Button";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import { showToast } from "@/utils/functions";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const HourPrice = ({ slideOut }: { slideOut: () => void }) => {
     const {
@@ -14,7 +15,9 @@ const HourPrice = ({ slideOut }: { slideOut: () => void }) => {
         getValues,
         setValue,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        resolver: zodResolver(PRICE_SCHEMA),
+    });
 
     const storeData = async (value: string) => {
         try {

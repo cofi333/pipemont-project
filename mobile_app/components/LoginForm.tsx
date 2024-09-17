@@ -1,7 +1,7 @@
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
-import { API_ENDPOINT, LOGIN_INPUTS } from "@/utils/constants";
+import { API_ENDPOINT, LOGIN_INPUTS, LOGIN_SCHEMA } from "@/utils/constants";
 import { GLOBALS } from "@/styles";
 import Button from "./Button";
 import axiosInstance from "@/hooks/axiosInstance";
@@ -9,13 +9,16 @@ import { jwtDecode } from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { showToast } from "@/utils/functions";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const LoginForm = ({ navigation }: any) => {
     const {
         handleSubmit,
         control,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        resolver: zodResolver(LOGIN_SCHEMA),
+    });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const onSubmit = async (data: any) => {
@@ -101,7 +104,8 @@ const STYLES = StyleSheet.create({
     forgot_container: {
         flexDirection: "row",
         justifyContent: "flex-end",
-        marginVertical: 8,
+        marginTop: 32,
+        marginBottom: 8,
         marginHorizontal: 6,
     },
     forgot_text: {
