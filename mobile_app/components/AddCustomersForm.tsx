@@ -20,6 +20,7 @@ import { GLOBALS } from "@/styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRecoilValue } from "recoil";
 import { refreshAtom } from "@/utils/constants";
+import axios from "axios";
 
 const AddCustomersForm = ({
     setIsModalVisible,
@@ -59,7 +60,15 @@ const AddCustomersForm = ({
                 showToast("success", response.data.message);
             }
         } catch (error) {
-            console.log(error);
+            if (axios.isAxiosError(error)) {
+                switch (error?.response?.status) {
+                    case 400:
+                    case 500:
+                        setIsLoading(false);
+                        showToast("error", error.response.data.message);
+                        break;
+                }
+            }
         }
     };
 

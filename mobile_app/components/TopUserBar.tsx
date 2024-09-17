@@ -21,7 +21,7 @@ const TopUserBar = ({
     navigation,
 }: {
     title?: string;
-    navigation: any;
+    navigation?: any;
 }) => {
     const [user] = useRecoilState(userAtom);
     const slideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current;

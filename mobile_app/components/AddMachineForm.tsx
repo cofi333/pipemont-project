@@ -8,6 +8,7 @@ import axiosInstance from "@/hooks/axiosInstance";
 import { showToast } from "@/utils/functions";
 import { useRecoilValue } from "recoil";
 import { refreshAtom } from "@/utils/constants";
+import axios from "axios";
 
 const AddMachineForm = ({
     setIsModalVisible,
@@ -39,7 +40,15 @@ const AddMachineForm = ({
                 setIsModalVisible(false);
             }
         } catch (error) {
-            console.log(error);
+            if (axios.isAxiosError(error)) {
+                switch (error?.response?.status) {
+                    case 400:
+                    case 500:
+                        setIsLoading(false);
+                        showToast("error", error.response.data.message);
+                        break;
+                }
+            }
         }
     };
 

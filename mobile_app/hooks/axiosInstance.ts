@@ -1,9 +1,9 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL: "http://192.168.1.6:4000",
+    baseURL: process.env.EXPO_PUBLIC_BACKEND_URL,
     headers: {
-        "Access-Control-Allow-Origin": "http://pipemont-mobile-app.com",
+        Referer: "http://pipemont-mobile-app.com",
         "Content-Type": "application/json",
     },
 });

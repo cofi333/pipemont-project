@@ -12,6 +12,7 @@ import axiosInstance from "@/hooks/axiosInstance";
 import { showToast } from "@/utils/functions";
 import { useRecoilValue } from "recoil";
 import { refreshAtom } from "@/utils/constants";
+import axios from "axios";
 
 const ClientChargeForm = ({
     setIsModalVisible,
@@ -60,8 +61,16 @@ const ClientChargeForm = ({
                 setIsModalVisible(false);
                 showToast("success", response.data.message);
             }
-        } catch (e) {
-            console.log(e);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                switch (error?.response?.status) {
+                    case 400:
+                    case 500:
+                        setIsLoading(false);
+                        showToast("error", error.response.data.message);
+                        break;
+                }
+            }
         }
     };
 
