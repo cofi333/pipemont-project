@@ -6,6 +6,8 @@ const nodemailer = require("nodemailer");
 const { generateToken } = require("../utils/functions")
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const fs = require('fs');
+const path = require('path');
 dotenv.config();
 
 const { JWT_SECRET, JWT_EXPIRES, EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASSWORD } = process.env;
@@ -43,12 +45,17 @@ router.post("/register", async(req,res) => {
         const newUser = await user.save();
 
         if (newUser) {
-           await transporter.sendMail({
-                from:'"PipeMont" <admin@isusivanjevlagesubotica.rs>',
+            const templatePath = path.join(__dirname, '../templates/emailTemplate.html');
+            let htmlContent = fs.readFileSync(templatePath, 'utf8');
+        
+            htmlContent = htmlContent.replace('{{token}}', newUser.registrationToken);
+        
+            await transporter.sendMail({
+                from: '"PipeMont" <admin@isusivanjevlagesubotica.rs>',
                 to: req.body.email,
                 subject: "Molimo vas aktivirajte nalog",
-                text: `Tvoj kod za aktivaciju naloga je: ${newUser.registrationToken}`
-             })
+                html: htmlContent // Use the generated HTML content
+            });
         }
         return res.status(201).json({message: "Proveri e-mail inboks za aktivaciju naloga"});
     } catch (err) {
