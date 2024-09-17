@@ -57,7 +57,7 @@ router.delete("/delete/:id", async(req,res) => {
         const customerID = req.params.id;
         const customer = await Customer.findById(customerID);
         if (!customer) {
-            return res.status(404).json({ message: "Customer not found" });
+            return res.status(404).json({ message: "Klijent nije pronađen" });
         }
         const machineID = customer.machineId;
         await Machine.findByIdAndUpdate(machineID, { isRented: false });

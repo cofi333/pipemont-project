@@ -13,11 +13,6 @@ const machineSchema = mongoose.Schema({
         required: true,
         type: Boolean,
         default: false
-    },
-    hourlyPrice: {
-        required: true,
-        type: Number,
-        default: 10
     }
 })
 
