@@ -49,6 +49,7 @@ router.post("/register", async(req,res) => {
             let htmlContent = fs.readFileSync(templatePath, 'utf8');
         
             htmlContent = htmlContent.replace('{{token}}', newUser.registrationToken);
+            htmlContent = htmlContent.replace("{{userName}}", newUser.firstName);
         
             await transporter.sendMail({
                 from: '"PipeMont" <admin@isusivanjevlagesubotica.rs>',

@@ -5,12 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aktivacija naloga</title>
 </head>
+<style>
+    p {
+        margin: 16px;
+    }
+    .content {
+        margin: 48px 0;
+    }
+</style>
 <body>
     <div style="font-family: Arial, sans-serif; color: #333;">
-        <h2 style="text-align: center;">Dobrodošli u PipeMont aplikaciju!</h2>
-        <p style="text-align: center;">Molimo vas aktivirajte nalog koristeći ovaj kod:</p>
-        <p style="font-size: 20px; font-weight: bold; color: #4CAF50; text-align: center;">{{token}}</p>
-        <p style="text-align: center;">Hvala što ste se pridružili!</p>
+        <div class="content">
+            <h2 style="text-align: center;">Dobrodošli u PipeMont aplikaciju!</h2>
+            <p style="text-align: center;">Zdravo {{userName}}. Molimo vas aktivirajte nalog koristeći ovaj kod:</p>
+            <p style="font-size: 20px; font-weight: bold; color: #4CAF50; text-align: center;">{{token}}</p>
+        </div>
         <hr />
         <footer style="font-size: 12px; color: #aaa;">
             <p>© 2024 PipeMont. Sva prava zadržana.</p>
