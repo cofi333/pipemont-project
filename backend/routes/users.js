@@ -90,9 +90,8 @@ router.post("/login", async(req,res) => {
         const { email, password } = req.body;
 
         const user = await User.findOne({email});
-        const isGoodPassword = await bcrypt.compare(password, user.password);
-
         if(!user) return res.status(401).json({message: "Uneti podaci su pogrešni"})
+        const isGoodPassword = await bcrypt.compare(password, user.password);
         if(!isGoodPassword) return res.status(401).json({message: "Uneti podaci su pogrešni"})
         const token = jwt.sign({ userId: user._id, firstName: user.firstName, lastName: user.lastName }, JWT_SECRET, { expiresIn: JWT_EXPIRES });
 
