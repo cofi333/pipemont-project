@@ -3,7 +3,7 @@ const router = express.Router()
 const User = require("../models/user")
 const bcrypt = require('bcrypt');
 const nodemailer = require("nodemailer");
-const { generateToken } = require("../utils/functions")
+const { generateToken, correctNameMessage } = require("../utils/functions")
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const fs = require('fs');
@@ -49,7 +49,7 @@ router.post("/register", async(req,res) => {
             let htmlContent = fs.readFileSync(templatePath, 'utf8');
         
             htmlContent = htmlContent.replace('{{token}}', newUser.registrationToken);
-            htmlContent = htmlContent.replace("{{userName}}", newUser.firstName);
+            htmlContent = htmlContent.replace("{{userName}}", correctNameMessage(newUser.firstName));
         
             await transporter.sendMail({
                 from: '"PipeMont" <admin@isusivanjevlagesubotica.rs>',

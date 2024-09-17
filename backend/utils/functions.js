@@ -10,7 +10,15 @@ const generateToken = (length) => {
     return result;
 }
 
+ const correctNameMessage = (name) => {
+  const lastLetter = name.charAt(name.length - 1);
+  if (["o", "a"].includes(lastLetter)) return name;
+  return `${name}e`;
+};
+
+
 
 module.exports = {
-    generateToken
+    generateToken,
+    correctNameMessage
 };  
