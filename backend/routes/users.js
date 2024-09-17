@@ -45,7 +45,7 @@ router.post("/register", async(req,res) => {
         const newUser = await user.save();
 
         if (newUser) {
-            const templatePath = path.join(__dirname, '../templates/emailTemplate.html');
+            const templatePath = path.join(__dirname, '../templates/activateAccount.html');
             let htmlContent = fs.readFileSync(templatePath, 'utf8');
         
             htmlContent = htmlContent.replace('{{token}}', newUser.registrationToken);
