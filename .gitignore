@@ -1,7 +1,7 @@
 backend/node_modules/
 mobile_app/node_modules
 mobile_app/.expo/
-mobile_app/.env
+mobile_app/*.env
 backend/.env
 dist/
 npm-debug.*
@@ -12,4 +12,3 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-mobile_app/expo-env.d.ts
