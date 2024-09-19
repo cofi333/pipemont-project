@@ -17,7 +17,6 @@ import { COLORS } from "@/utils/constants";
 import useFetch from "@/hooks/useFetch";
 import { TAvailableMachines } from "@/utils/types";
 import { GLOBALS } from "@/styles";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRecoilValue } from "recoil";
 import { refreshAtom } from "@/utils/constants";
 import axios from "axios";
@@ -41,11 +40,6 @@ const AddCustomersForm = ({
         API_ENDPOINT.ALL_AVAILABLE_MACHINES
     );
 
-    const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-    const [endDate, setEndDate] = useState<Date | undefined>(undefined);
-    const [showStartDatePicker, setShowStartDatePicker] =
-        useState<boolean>(false);
-    const [showEndDatePicker, setShowEndDatePicker] = useState<boolean>(false);
     const refreshActiveMachines = useRecoilValue(refreshAtom);
 
     const onSubmit = async (data: any) => {
