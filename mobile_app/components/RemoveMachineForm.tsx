@@ -14,6 +14,7 @@ import { TAvailableMachines } from "@/utils/types";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GLOBALS } from "@/styles";
+import { userAtom } from "@/utils/constants";
 
 const RemoveMachineForm = ({
     setIsModalVisible,
@@ -31,6 +32,7 @@ const RemoveMachineForm = ({
     });
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const refresActiveMachines = useRecoilValue(refreshAtom);
+    const user = useRecoilValue(userAtom);
     const { data, loading } = useFetch<TAvailableMachines[]>(
         API_ENDPOINT.ALL_MACHINES
     );
@@ -40,7 +42,11 @@ const RemoveMachineForm = ({
             setIsLoading(true);
             const response = await axiosInstance.delete(
                 `${API_ENDPOINT.DELETE_MACHINE}/${data.machine}`,
-                data
+                {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                }
             );
 
             if (response.status === 200) {

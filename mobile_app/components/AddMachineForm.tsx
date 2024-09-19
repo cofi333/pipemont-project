@@ -14,6 +14,7 @@ import { useRecoilValue } from "recoil";
 import { refreshAtom } from "@/utils/constants";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { userAtom } from "@/utils/constants";
 
 const AddMachineForm = ({
     setIsModalVisible,
@@ -31,13 +32,19 @@ const AddMachineForm = ({
     });
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const refresActiveMachines = useRecoilValue(refreshAtom);
+    const user = useRecoilValue(userAtom);
 
     const onSubmit = async (data: any) => {
         try {
             setIsLoading(true);
             const response = await axiosInstance.post(
                 API_ENDPOINT.ADD_MACHINE,
-                data
+                data,
+                {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                }
             );
 
             if (response.status === 201) {

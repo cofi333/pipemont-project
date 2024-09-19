@@ -13,7 +13,12 @@ const useFetch = <T>(url: string) => {
         try {
             setLoading(true);
             let response = await axios.get(
-                `${process.env.EXPO_PUBLIC_BACKEND_URL}${url}`
+                `${process.env.EXPO_PUBLIC_BACKEND_URL}${url}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                }
             );
             setData(response.data);
         } catch (err: any) {

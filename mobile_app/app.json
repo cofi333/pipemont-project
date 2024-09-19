@@ -1,13 +1,13 @@
 {
   "expo": {
     "name": "Pipe mont",
-    "slug": "Pipe mont",
+    "slug": "pipemont",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image":"./assets/images/splash.png",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -16,9 +16,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/appicon.png",
+        "foregroundImage": "./assets/images/appIcon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.filip16.pipemont"
     },
     "web": {
       "bundler": "metro",
@@ -29,6 +30,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c394d497-a397-4ed8-b138-80a52885fb8a"
+      }
     }
   }
 }

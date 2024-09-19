@@ -26,7 +26,10 @@ const LoginScreen = ({ navigation }: any) => {
                     </View>
                     <View style={STYLES.form}>
                         {form === "login" ? (
-                            <LoginForm navigation={navigation} />
+                            <LoginForm
+                                navigation={navigation}
+                                changeForm={setForm}
+                            />
                         ) : (
                             <RegisterForm changeForm={setForm} />
                         )}

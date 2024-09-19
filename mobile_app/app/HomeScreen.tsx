@@ -8,12 +8,17 @@ import { showToast } from "@/utils/functions";
 import { TJwtUser } from "@/utils/types";
 import Toast from "react-native-toast-message";
 import TopUserBar from "@/components/TopUserBar";
-import { GLOBALS } from "@/styles";
 import ActiveMachines from "@/components/ActiveMachines";
 import ClientButtons from "@/components/ClientButtons";
+import useAppHandlers from "@/hooks/appHandlers";
+import { useState } from "react";
+import ModalLayout from "@/components/ModalLayout";
+import Logout from "@/components/Logout";
 
 const HomeScreen = ({ navigation }: any) => {
     const [user, setUser] = useRecoilState(userAtom);
+    const [isVisible, setIsVisible] = useState<boolean>(false);
+    const { setIsLogoutConfirmed } = useAppHandlers(navigation, setIsVisible);
 
     useEffect(() => {
         const getData = async () => {
@@ -27,6 +32,7 @@ const HomeScreen = ({ navigation }: any) => {
                     userId: decoded.userId,
                     firstName: decoded.firstName,
                     lastName: decoded.lastName,
+                    token: JSON.parse(userToken!),
                 }));
                 showToast("success", "Uspešno ste se prijavili");
             } catch (e) {
@@ -47,6 +53,12 @@ const HomeScreen = ({ navigation }: any) => {
                 </View>
             </View>
             <Toast />
+            <ModalLayout isVisible={isVisible} setIsModalVisible={setIsVisible}>
+                <Logout
+                    navigation={navigation}
+                    setIsLogoutConfirmed={setIsLogoutConfirmed}
+                />
+            </ModalLayout>
         </>
     );
 };

@@ -2,11 +2,12 @@ const express = require("express")
 const router = express.Router()
 const Customer = require("../models/customer")
 const Machine = require("../models/machine")
+const { authenticateToken } = require("../utils/functions")
 
 
 
 // route for adding a customer
-router.post("/add", async(req,res)=> {
+router.post("/add", authenticateToken, async(req,res)=> {
     try{
         const {machine, customerName, customerAddress, customerPhoneNumber} = req.body;
         const selectedMachine = await Machine.findOne({_id: machine});
@@ -28,7 +29,7 @@ router.post("/add", async(req,res)=> {
 })
 
 // route for getting customers informations
-router.get("/getCustomerInformations/:id", async(req,res) => {
+router.get("/getCustomerInformations/:id", authenticateToken, async(req,res) => {
     try {
         const machineID = req.params.id;
         const customer = await Customer.findOne({machineId: machineID});
@@ -42,7 +43,7 @@ router.get("/getCustomerInformations/:id", async(req,res) => {
 })
 
 // route for getting all customers
-router.get("/getAll", async(req, res) => {
+router.get("/getAll", authenticateToken, async(req, res) => {
     try{
         const allCustomers = await Customer.find();
         return res.status(200).json(allCustomers);
@@ -52,7 +53,7 @@ router.get("/getAll", async(req, res) => {
 })
 
 // route for deleting customer
-router.delete("/delete/:id", async(req,res) => {
+router.delete("/delete/:id", authenticateToken, async(req,res) => {
     try {
         const customerID = req.params.id;
         const customer = await Customer.findById(customerID);

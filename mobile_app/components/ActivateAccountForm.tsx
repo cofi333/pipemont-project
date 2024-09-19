@@ -11,8 +11,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const ActivateAccountForm = ({
     changeForm,
+    email,
 }: {
     changeForm: (data: string) => void;
+    email?: string;
 }) => {
     const {
         handleSubmit,
@@ -21,7 +23,9 @@ const ActivateAccountForm = ({
     } = useForm({
         resolver: zodResolver(ACTIVATE_ACCOUNT_SCHEMA),
     });
+
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoadingNewCode, setIsLoadingNewCode] = useState<boolean>(false);
 
     const onSubmit = async (data: any) => {
         try {
@@ -40,9 +44,34 @@ const ActivateAccountForm = ({
             if (axios.isAxiosError(error)) {
                 switch (error?.response?.status) {
                     case 400:
-                    case 404:
+                    case 401:
                     case 500:
                         setIsLoading(false);
+                        showToast("error", error.response.data.message);
+                        break;
+                }
+            }
+        }
+    };
+
+    const onSubmitNewCode = async () => {
+        try {
+            setIsLoadingNewCode(true);
+            const response = await axiosInstance.post(API_ENDPOINT.NEW_CODE, {
+                email: email,
+            });
+
+            if (response.status === 200) {
+                setIsLoadingNewCode(false);
+                showToast("success", response.data.message);
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                switch (error?.response?.status) {
+                    case 400:
+                    case 401:
+                    case 500:
+                        setIsLoadingNewCode(false);
                         showToast("error", error.response.data.message);
                         break;
                 }
@@ -78,6 +107,12 @@ const ActivateAccountForm = ({
                     onPress={handleSubmit(onSubmit)}
                     isLoading={isLoading}
                     type="primary"
+                />
+                <Button
+                    title="Zahtevaj novi kod"
+                    onPress={onSubmitNewCode}
+                    isLoading={isLoadingNewCode}
+                    type="green"
                 />
             </View>
         </View>

@@ -37,6 +37,7 @@ export type TJwtUser = {
     lastName: string;
     email: string;
     iat: number;
+    token: string;
 };
 
 export interface ActiveMachinesData {
@@ -71,4 +72,8 @@ export type TCustomer = {
     customerName: string;
     customerAddress: string;
     customerPhoneNumber: string;
+};
+
+export type WelcomeScreenParams = {
+    fromLogout?: boolean;
 };

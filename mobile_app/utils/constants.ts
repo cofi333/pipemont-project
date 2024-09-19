@@ -24,6 +24,7 @@ export const API_ENDPOINT: TApiEndpoints = {
     GET_CUSTOMER_INFO: "/customers/getCustomerInformations",
     GET_ALL_CUSTOMERS: "/customers/getAll",
     DELETE_CUSTOMER: "/customers/delete",
+    NEW_CODE: "/users/newCode",
 };
 
 export const LOGIN_INPUTS: TInputs[] = [

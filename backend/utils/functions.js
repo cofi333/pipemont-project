@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 const generateToken = (length) => {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -16,9 +18,20 @@ const generateToken = (length) => {
   return `${name}e`;
 };
 
+const authenticateToken = (req, res, next) => {
+    const header = req.headers['authorization'];
+    const token = header && header.split(' ')[1];
+    if(token == null) return res.status(401).json({message: "Kod za autorizaciju je obavezan"});
+    jwt.verify(token, process.env.JWT_SECRET, (err) => {
+      if (err) return res.status(401).json({message: "Kod za autorizaciju je obavezan"});
+      next()
+    })
+
+}
 
 
 module.exports = {
     generateToken,
-    correctNameMessage
+    correctNameMessage,
+    authenticateToken
 };  

@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
-import { ADD_CLIENT_SCHEMA, API_ENDPOINT } from "@/utils/constants";
+import { ADD_CLIENT_SCHEMA, API_ENDPOINT, userAtom } from "@/utils/constants";
 import Button from "./Button";
 import axiosInstance from "@/hooks/axiosInstance";
 import { showToast } from "@/utils/functions";
@@ -41,19 +41,20 @@ const AddCustomersForm = ({
         API_ENDPOINT.ALL_AVAILABLE_MACHINES
     );
 
-    const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-    const [endDate, setEndDate] = useState<Date | undefined>(undefined);
-    const [showStartDatePicker, setShowStartDatePicker] =
-        useState<boolean>(false);
-    const [showEndDatePicker, setShowEndDatePicker] = useState<boolean>(false);
     const refreshActiveMachines = useRecoilValue(refreshAtom);
+    const user = useRecoilValue(userAtom);
 
     const onSubmit = async (data: any) => {
         try {
             setIsLoading(true);
             const response = await axiosInstance.post(
                 API_ENDPOINT.ADD_CUSTOMER,
-                data
+                data,
+                {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                }
             );
 
             if (response.status === 201) {

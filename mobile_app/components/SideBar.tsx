@@ -11,7 +11,6 @@ import {
 import { images } from "@/assets/images";
 import HourPrice from "./HourPrice";
 import Button from "./Button";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SideBar = ({
     slideAnim,
@@ -22,11 +21,6 @@ const SideBar = ({
     slideOut: () => void;
     navigation: any;
 }) => {
-    const logOut = async () => {
-        await AsyncStorage.removeItem("user");
-        navigation.navigate("WelcomeScreen");
-    };
-
     return (
         <Animated.View
             style={[
@@ -53,7 +47,11 @@ const SideBar = ({
                 <HourPrice slideOut={slideOut} />
             </View>
             <View style={STYLES.bottomSideBar}>
-                <Button onPress={logOut} title="Odjavi me" type="red" />
+                <Button
+                    onPress={() => navigation.navigate("WelcomeScreen")}
+                    title="Odjavi me"
+                    type="red"
+                />
             </View>
         </Animated.View>
     );

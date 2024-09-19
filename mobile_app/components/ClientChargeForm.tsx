@@ -2,7 +2,12 @@ import { View, StyleSheet, TextInput, Text } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { Dropdown } from "react-native-element-dropdown";
-import { API_ENDPOINT, CLIENT_CHARGE_SCHEMA, COLORS } from "@/utils/constants";
+import {
+    API_ENDPOINT,
+    CLIENT_CHARGE_SCHEMA,
+    COLORS,
+    userAtom,
+} from "@/utils/constants";
 import useFetch from "@/hooks/useFetch";
 import { TCustomer } from "@/utils/types";
 import { GLOBALS } from "@/styles";
@@ -34,6 +39,7 @@ const ClientChargeForm = ({
     const [hours, setHours] = useState<string>("");
     const [price, setPrice] = useState<string>("");
     const refresActiveMachines = useRecoilValue(refreshAtom);
+    const user = useRecoilValue(userAtom);
 
     useEffect(() => {
         const calculatePrice = async () => {
@@ -56,7 +62,12 @@ const ClientChargeForm = ({
             setIsLoading(true);
             const { price, ...sendData } = data;
             const response = await axiosInstance.delete(
-                `${API_ENDPOINT.DELETE_CUSTOMER}/${sendData.client}`
+                `${API_ENDPOINT.DELETE_CUSTOMER}/${sendData.client}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                }
             );
 
             if (response.status === 200) {

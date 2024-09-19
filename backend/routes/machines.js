@@ -1,9 +1,10 @@
 const express = require("express")
 const router = express.Router()
 const Machine = require("../models/machine")
+const { authenticateToken } = require("../utils/functions")
 
 // route for adding a machine
-router.post("/add", async(req,res) => {
+router.post("/add", authenticateToken, async(req,res) => {
     try{
         const { machineProducer, machineName } = req.body;
         const machine = new Machine({
@@ -20,7 +21,7 @@ router.post("/add", async(req,res) => {
 })
 
 // route for getting number of machines
-router.get("/activeMachines", async(req,res) => {
+router.get("/activeMachines",  authenticateToken, async(req,res) => {
     try {
         const allMachines = await Machine.find();
         const rentedMachines = await Machine.find({ isRented: true });
@@ -37,7 +38,7 @@ router.get("/activeMachines", async(req,res) => {
 })
 
 // route for getting all machines
-router.get("/allMachines", async(req,res) => {
+router.get("/allMachines", authenticateToken , async(req,res) => {
     try {
         const allMachines = await Machine.find();
         const machinesWithFullName = allMachines.map(machine => ({
@@ -51,7 +52,7 @@ router.get("/allMachines", async(req,res) => {
 })
 
 // route for getting all not rented machines
-router.get("/allAvailableMachines", async(req,res) => {
+router.get("/allAvailableMachines", authenticateToken, async(req,res) => {
     try {
         const allAvailableMachines = await Machine.find({isRented: false});
         const machinesWithFullName = allAvailableMachines.map(machine => ({
@@ -65,7 +66,7 @@ router.get("/allAvailableMachines", async(req,res) => {
 })
 
 // route for deleting the machine
-router.delete("/delete/:id", async(req,res) => {
+router.delete("/delete/:id", authenticateToken, async(req,res) => {
     try{
         const machineID = req.params.id;
         const machine = await Machine.findById(machineID);

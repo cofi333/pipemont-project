@@ -72,7 +72,7 @@ router.post("/activate", async(req,res) => {
         if (!registrationToken) return res.status(400).json({ message: "Token je obavezan" });
        
         const user = await User.findOne({ registrationToken });
-        if (!user) return res.status(404).json({ message: "Korisnik nije pronađen" });
+        if (!user) return res.status(404).json({ message: "Token nije validan" });
 
         if(registrationExpires < Date.now()) {
             user.registrationToken = undefined;
@@ -96,20 +96,50 @@ router.post("/activate", async(req,res) => {
 router.post("/login", async(req,res) => {
     try{
         const { email, password } = req.body;
-
         const user = await User.findOne({email});
         if(user.isActive === false) return res.status(403).json({message: "Molimo vas aktivirajte vaš nalog"})
         if(!user) return res.status(401).json({message: "Uneti podaci su pogrešni"})
         const isGoodPassword = await bcrypt.compare(password, user.password);
         if(!isGoodPassword) return res.status(401).json({message: "Uneti podaci su pogrešni"})
         const token = jwt.sign({ userId: user._id, firstName: user.firstName, lastName: user.lastName }, JWT_SECRET, { expiresIn: JWT_EXPIRES });
-
         return res.status(200).json({ token });
 
     }catch(e) {
+        console.log(e)
         return res.status(500).json({ message: "Došlo je do greške na serveru" });
     }
 })
 
+router.post("/newCode", async(req,res) => {
+    try{
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if(!user)  return res.status(404).json({ message: "Korisnik nije pronađen" });
+        const newToken = generateToken(20);
+        const newExpirationDate = Date.now() + 3600000;
+        user.registrationToken = newToken;
+        user.registrationExpires = newExpirationDate;
+        await user.save();
+
+        const templatePath = path.join(__dirname, '../templates/activateAccount.html');
+        let htmlContent = fs.readFileSync(templatePath, 'utf8');
+        htmlContent = htmlContent.replace('{{token}}', newToken);
+        htmlContent = htmlContent.replace("{{userName}}", correctNameMessage(user.firstName));
+
+        await transporter.sendMail({
+            from: '"PipeMont" <admin@isusivanjevlagesubotica.rs>',
+            to: email,
+            subject: "Molimo vas aktivirajte nalog",
+            html: htmlContent 
+        });
+
+        return res.status(200).json({message: "Novi token za aktivaciju je poslat na e-mail"})
+
+
+        
+    }catch(e) {
+        return res.status(500).json({ message: "Došlo je do greške na serveru" });
+    }
+})
 
 module.exports = router
